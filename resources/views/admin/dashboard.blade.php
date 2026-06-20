@@ -34,7 +34,7 @@
     </div>
 </div>
 
-<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 18px;">
+<div class="dashboard-layout">
 
     {{-- Recent Inquiries --}}
     <div class="card">

@@ -210,14 +210,111 @@
         }
         .pagination .page-item.active .page-link { background: var(--primary); color: #fff; border-color: var(--primary); }
         .pagination .page-item .page-link:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* Sidebar Responsive Toggle Elements */
+        .sidebar-toggle { display: none; }
+        .sidebar-close { display: none; }
+        
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(13, 27, 42, 0.4);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 99;
+            transition: opacity 0.3s ease;
+        }
+
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 18px;
+        }
+
+        @media (max-width: 991px) {
+            .sidebar {
+                left: -240px;
+                transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            .sidebar.open {
+                left: 0;
+            }
+            .sidebar-overlay.open {
+                display: block;
+            }
+            .admin-main {
+                margin-left: 0;
+            }
+            .sidebar-toggle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                background: none;
+                border: none;
+                font-size: 20px;
+                color: var(--dark);
+                cursor: pointer;
+            }
+            .sidebar-close {
+                display: block;
+                background: none;
+                border: none;
+                color: #fff;
+                font-size: 18px;
+                cursor: pointer;
+                opacity: 0.85;
+                transition: opacity 0.2s;
+            }
+            .sidebar-close:hover {
+                opacity: 1;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+            .form-grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .admin-topbar {
+                padding: 0 15px;
+            }
+            .admin-content {
+                padding: 15px;
+            }
+            .card-body {
+                padding: 15px;
+                overflow-x: auto;
+            }
+            .page-head {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+        }
     </style>
     @yield('extra_css')
 </head>
 <body>
 
-<aside class="sidebar">
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="adminSidebar">
     <div class="sidebar-brand">
-        <span>Agro<em>Net</em></span>
+        <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+            <span>Agro<em>Net</em></span>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close Sidebar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
         <small>Admin Control Panel</small>
     </div>
     <nav class="sidebar-nav">
@@ -264,7 +361,12 @@
 
 <div class="admin-main">
     <div class="admin-topbar">
-        <h1>@yield('title', 'Dashboard')</h1>
+        <div class="admin-topbar-left" style="display: flex; align-items: center; gap: 15px;">
+            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <h1>@yield('title', 'Dashboard')</h1>
+        </div>
         <div class="admin-topbar-right">
             <span class="admin-name">{{ session('admin_name', 'Admin') }}</span>
             <div class="admin-avatar">{{ substr(session('admin_name', 'A'), 0, 1) }}</div>
@@ -286,6 +388,35 @@
         @yield('content')
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('adminSidebar');
+        const toggleBtn = document.getElementById('sidebarToggle');
+        const closeBtn = document.getElementById('sidebarClose');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('open');
+            if (sidebar.classList.contains('open')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', toggleSidebar);
+        }
+        if (closeBtn) {
+            closeBtn.addEventListener('click', toggleSidebar);
+        }
+        if (overlay) {
+            overlay.addEventListener('click', toggleSidebar);
+        }
+    });
+</script>
 
 @yield('extra_js')
 </body>

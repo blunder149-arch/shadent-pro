@@ -2037,6 +2037,7 @@ h1, h2, h3, h4, h5, h6 {
     .topbar { display: none; }
     .main-nav { display: none; }
     .hamburger { display: flex; }
+    .header-cta .btn-primary { display: none !important; }
     
     .inquiry-wrapper { grid-template-columns: 1fr; gap: 40px; }
     .products-list-grid { grid-template-columns: repeat(2, 1fr); }
