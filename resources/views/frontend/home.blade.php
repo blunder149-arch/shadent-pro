@@ -395,6 +395,14 @@
                 View More Photos <i class="fa-solid fa-arrow-right"></i>
             </a>
         </div>
+        <!-- Gallery Lightbox Modal -->
+        <div id="galleryLightbox" class="lightbox-modal" aria-hidden="true" role="dialog">
+            <button class="lightbox-close" aria-label="Close Lightbox">&times;</button>
+            <div class="lightbox-content">
+                <img id="lightboxImage" src="" alt="">
+                <div id="lightboxCaption" class="lightbox-caption"></div>
+            </div>
+        </div>
     </div>
 </section>
 

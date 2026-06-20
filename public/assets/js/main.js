@@ -50,6 +50,16 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    const mobileLinks = document.querySelectorAll('.mobile-nav a');
+    mobileLinks.forEach(function (link) {
+        link.addEventListener('click', function () {
+            if (mobileMenu) {
+                mobileMenu.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+        });
+    });
+
     /* ── Hero Swiper ──────────────────────────────── */
     if (document.querySelector('.swiper-hero')) {
         new Swiper('.swiper-hero', {
@@ -237,4 +247,51 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         observer.observe(img);
     });
+
+    /* ── Gallery Lightbox ─────────────────────────── */
+    const galleryItems = document.querySelectorAll('.gallery-item-mock');
+    const lightbox = document.getElementById('galleryLightbox');
+    const lightboxImg = document.getElementById('lightboxImage');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+    const lightboxClose = document.querySelector('.lightbox-close');
+
+    if (galleryItems.length > 0 && lightbox && lightboxImg) {
+        galleryItems.forEach(function (item) {
+            item.addEventListener('click', function () {
+                const img = item.querySelector('img');
+                if (img) {
+                    lightboxImg.src = img.src;
+                    lightboxImg.alt = img.alt || '';
+                    if (lightboxCaption) {
+                        lightboxCaption.textContent = img.alt || '';
+                    }
+                    lightbox.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+        });
+
+        if (lightboxClose) {
+            lightboxClose.addEventListener('click', function () {
+                lightbox.classList.remove('open');
+                document.body.style.overflow = '';
+            });
+        }
+
+        // Close on background click
+        lightbox.addEventListener('click', function (e) {
+            if (e.target === lightbox) {
+                lightbox.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Close on escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && lightbox.classList.contains('open')) {
+                lightbox.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+        });
+    }
 });
