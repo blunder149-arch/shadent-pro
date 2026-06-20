@@ -24,7 +24,10 @@ class ProductController extends Controller
                   ->orWhere('specifications', 'like', "%{$search}%")
                   ->orWhere('shade_percentage', 'like', "%{$search}%")
                   ->orWhere('width', 'like', "%{$search}%")
-                  ->orWhere('gsm', 'like', "%{$search}%");
+                  ->orWhere('gsm', 'like', "%{$search}%")
+                  ->orWhereHas('category', function ($catQuery) use ($search) {
+                      $catQuery->where('name', 'like', "%{$search}%");
+                  });
             });
         }
         
@@ -60,7 +63,10 @@ class ProductController extends Controller
                   ->orWhere('specifications', 'like', "%{$search}%")
                   ->orWhere('shade_percentage', 'like', "%{$search}%")
                   ->orWhere('width', 'like', "%{$search}%")
-                  ->orWhere('gsm', 'like', "%{$search}%");
+                  ->orWhere('gsm', 'like', "%{$search}%")
+                  ->orWhereHas('category', function ($catQuery) use ($search) {
+                      $catQuery->where('name', 'like', "%{$search}%");
+                  });
             });
         }
         
