@@ -1034,6 +1034,9 @@ h1, h2, h3, h4, h5, h6 {
     position: relative;
     padding: 0 40px;
 }
+.swiper-testimonials-custom .swiper-slide {
+    height: auto;
+}
 .testimonial-card-centered {
     background: #FFFFFF;
     border: 1px solid var(--border);
@@ -1042,6 +1045,9 @@ h1, h2, h3, h4, h5, h6 {
     text-align: center;
     box-shadow: var(--shadow-card);
     transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 .testimonial-card-centered:hover {
     transform: translateY(-2px);
@@ -1061,6 +1067,7 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1.8;
     font-style: italic;
     margin-bottom: 28px;
+    flex: 1;
 }
 .testimonial-user-mock {
     display: flex;
