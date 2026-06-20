@@ -17,7 +17,12 @@
             --font-h: 'Montserrat', sans-serif; --font-b: 'Inter', sans-serif;
             --radius: 6px; --shadow: 0 2px 12px rgba(0,0,0,0.07);
         }
-        body { font-family: var(--font-b); background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+        body { font-family: var(--font-b); background: var(--bg); color: var(--text); min-height: 100vh; }
         a { text-decoration: none; color: inherit; }
         img { max-width: 100%; }
 
@@ -75,7 +80,7 @@
         .sidebar-footer form button:hover { background: rgba(220,38,38,0.2); color: #fca5a5; }
 
         /* Main Content */
-        .admin-main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+        .admin-main { margin-left: 240px; display: flex; flex-direction: column; min-height: 100vh; min-width: 0; }
         .admin-topbar {
             background: var(--white); padding: 0 28px;
             height: 60px; display: flex; align-items: center;
@@ -93,7 +98,7 @@
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             color: #fff; font-weight: 700; font-size: 14px; font-family: var(--font-h);
         }
-        .admin-content { padding: 28px; flex: 1; }
+        .admin-content { padding: 28px; }
 
         /* Cards */
         .card {
@@ -140,7 +145,14 @@
             color: var(--muted); background: var(--bg);
             border-bottom: 1px solid var(--border);
         }
-        .admin-table td { padding: 13px 16px; font-size: 13.5px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        .admin-table td {
+            padding: 13px 16px;
+            font-size: 13.5px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
         .admin-table tr:last-child td { border-bottom: none; }
         .admin-table tr:hover td { background: #f9fbf9; }
 
@@ -216,14 +228,22 @@
         .sidebar-close { display: none; }
         
         .sidebar-overlay {
-            display: none;
             position: fixed;
             inset: 0;
-            background: rgba(13, 27, 42, 0.4);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+            background: rgba(13, 27, 42, 0.45);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
             z-index: 99;
-            transition: opacity 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+        .sidebar-overlay.open {
+            display: block; /* Backwards compatibility with standard script toggles */
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
         }
 
         .dashboard-layout {
@@ -240,8 +260,9 @@
             .sidebar.open {
                 left: 0;
             }
-            .sidebar-overlay.open {
-                display: block;
+            .sidebar-link {
+                padding: 13px 20px;
+                font-size: 14px;
             }
             .admin-main {
                 margin-left: 0;
@@ -250,24 +271,37 @@
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                background: none;
-                border: none;
-                font-size: 20px;
-                color: var(--dark);
+                background: rgba(42, 92, 42, 0.06);
+                border: 1px solid rgba(42, 92, 42, 0.12);
+                font-size: 18px;
+                color: var(--primary);
                 cursor: pointer;
+                width: 38px;
+                height: 38px;
+                border-radius: 6px;
+                transition: all 0.2s;
+            }
+            .sidebar-toggle:hover {
+                background: rgba(42, 92, 42, 0.12);
+                color: var(--primary-dark);
             }
             .sidebar-close {
-                display: block;
-                background: none;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(255, 255, 255, 0.08);
                 border: none;
                 color: #fff;
-                font-size: 18px;
+                font-size: 16px;
                 cursor: pointer;
-                opacity: 0.85;
-                transition: opacity 0.2s;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                transition: all 0.2s;
             }
             .sidebar-close:hover {
-                opacity: 1;
+                background: rgba(255, 255, 255, 0.15);
+                transform: scale(1.05);
             }
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -277,6 +311,22 @@
             }
             .form-grid-2 {
                 grid-template-columns: 1fr;
+            }
+            .card-body {
+                overflow-x: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-topbar h1 {
+                font-size: 14px;
+                max-width: 180px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .admin-topbar-right .admin-name {
+                display: none;
             }
         }
 
@@ -292,12 +342,46 @@
             }
             .card-body {
                 padding: 15px;
-                overflow-x: auto;
             }
             .page-head {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: stretch;
                 gap: 12px;
+            }
+            .page-head h2 {
+                font-size: 18px;
+            }
+            .page-head .btn, .page-head form, .page-head div {
+                width: 100%;
+            }
+            .page-head div {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+            .page-head div .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            form button[type="submit"], form .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .spec-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+                border: 1px dashed var(--border);
+                padding: 12px;
+                border-radius: var(--radius);
+                background: #fdfdfd;
+            }
+            .spec-row input {
+                width: 100%;
+            }
+            .spec-row button {
+                align-self: flex-end;
+                width: auto;
             }
         }
     </style>
