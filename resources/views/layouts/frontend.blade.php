@@ -174,11 +174,9 @@
                     <div>
                         <h4 class="footer-widget-title">Our Products</h4>
                         <div class="footer-links">
-                            <a href="{{ route('category.show', 'agriculture-shade-net') }}">Green Shade Net</a>
-                            <a href="{{ route('category.show', 'agriculture-shade-net') }}">Agriculture Net</a>
-                            <a href="{{ route('category.show', 'bird-protection-net') }}">Bird Protection Net</a>
-                            <a href="{{ route('category.show', 'greenhouse-net') }}">Greenhouse Net</a>
-                            <a href="{{ route('category.show', 'poultry-net') }}">Insect Net</a>
+                            @foreach(\App\Models\Category::where('is_active', true)->orderBy('sort_order')->take(5)->get() as $cat)
+                            <a href="{{ route('category.show', $cat->slug) }}">{{ $cat->name }}</a>
+                            @endforeach
                             <a href="{{ route('products.index') }}">All Products</a>
                         </div>
                     </div>
