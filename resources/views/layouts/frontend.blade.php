@@ -6,7 +6,7 @@
     <meta name="description" content="@yield('meta_description', 'AgroNet Solutions — Leading manufacturer of HDPE shade nets, agricultural nets, greenhouse nets, and construction safety nets in India.')">
     <title>@yield('title', 'AgroNet Solutions') | Green Shade Net Manufacturer</title>
 
-    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}?v=2">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
