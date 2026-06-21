@@ -125,3 +125,82 @@
 </div>
 
 @endsection
+
+@section('extra_css')
+<style>
+    /* Stat Cards Hover & Interaction */
+    .stat-card {
+        transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        cursor: pointer;
+    }
+    .stat-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.09);
+    }
+    
+    /* Micro-animation for icons */
+    .stat-icon {
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s ease;
+    }
+    .stat-card:hover .stat-icon {
+        transform: scale(1.15) rotate(4deg);
+    }
+
+    /* Stat Number Fade and Slide In */
+    .stat-number {
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(6px);
+        animation: statNumberAppear 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+    }
+
+    @keyframes statNumberAppear {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+@endsection
+
+@section('extra_js')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const counters = document.querySelectorAll('.stat-number');
+        
+        counters.forEach(counter => {
+            const targetVal = parseInt(counter.textContent.trim(), 10);
+            if (isNaN(targetVal)) return;
+
+            // Start count from 0
+            counter.textContent = '0';
+            
+            // Animation settings
+            const duration = 1500; // 1.5 seconds duration
+            let startTime = null;
+
+            function animateCount(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Cubic ease-out curve
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                
+                // Calculate current value
+                const currentVal = Math.floor(easeOut * targetVal);
+                counter.textContent = currentVal;
+
+                if (progress < 1) {
+                    requestAnimationFrame(animateCount);
+                } else {
+                    counter.textContent = targetVal;
+                }
+            }
+
+            // Start the animation frame loop
+            requestAnimationFrame(animateCount);
+        });
+    });
+</script>
+@endsection
